@@ -6,7 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../atoms/Form";
-import { Textarea } from "../atoms/textarea";
+import { Textarea } from "@/components/atoms/Textarea";
 
 interface FormTextareaFieldProps<T extends FieldValues>
   extends React.ComponentProps<"textarea"> {

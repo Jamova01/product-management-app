@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../atoms/Form";
-import { Input } from "../atoms/input";
+import { Input } from "@/components/atoms/Input";
 
 interface FormTextFieldProps<T extends FieldValues>
   extends React.ComponentProps<"input"> {
