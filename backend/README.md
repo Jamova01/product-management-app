@@ -1,98 +1,211 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Product Management App - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend API desarrollado con NestJS y Prisma para la gestión de productos.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Tecnologías
 
-## Description
+- **Framework**: NestJS
+- **Base de datos**: Prisma ORM
+- **Lenguaje**: TypeScript
+- **Arquitectura**: RESTful API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📁 Estructura del proyecto
 
-## Project setup
-
-```bash
-$ npm install
+```
+src/
+├── app.module.ts              # Módulo principal de la aplicación
+├── database/                  # Configuración de base de datos
+│   ├── prisma.module.ts       # Módulo de Prisma
+│   └── prisma.service.ts      # Servicio de conexión a Prisma
+├── main.ts                    # Punto de entrada de la aplicación
+└── products/                  # Módulo de productos
+    ├── dto/                   # Data Transfer Objects
+    │   ├── create-product.dto.ts
+    │   └── update-product.dto.ts
+    ├── entities/              # Entidades del dominio
+    │   └── product.entity.ts
+    ├── products.controller.ts # Controlador de productos
+    ├── products.module.ts     # Módulo de productos
+    └── products.service.ts    # Lógica de negocio de productos
 ```
 
-## Compile and run the project
+## 🛠️ Instalación
+
+1. **Clonar el repositorio**
+
+   ```bash
+   git clone https://github.com/Jamova01/product-management-app
+   cd product-management-app/backend
+   ```
+
+2. **Instalar dependencias**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**
+
+   Crear un archivo `.env` en la raíz del proyecto:
+
+   ```env
+   POSTGRES_DB=""
+   POSTGRES_USER=""
+   POSTGRES_PASSWORD=""
+   POSTGRES_HOST=""
+   POSTGRES_PORT=""
+   DATABASE_URL="your-database-connection-string"
+   ```
+
+4. **Configurar la base de datos**
+
+   ```bash
+   # Generar el cliente de Prisma
+   npx prisma generate
+
+   # Ejecutar migraciones
+   npx prisma db push
+   ```
+
+## 🚦 Ejecutar la aplicación
+
+### Desarrollo
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
 
-## Run tests
+### Producción
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run build
+npm run start:prod
 ```
 
-## Deployment
+La API estará disponible en `http://localhost:3000`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 📚 API Endpoints
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Productos
+
+| Método | Endpoint        | Descripción                 |
+| ------ | --------------- | --------------------------- |
+| GET    | `/products`     | Obtener todos los productos |
+| GET    | `/products/:id` | Obtener un producto por ID  |
+| POST   | `/products`     | Crear un nuevo producto     |
+| PUT    | `/products/:id` | Actualizar un producto      |
+| DELETE | `/products/:id` | Eliminar un producto        |
+
+### Ejemplos de uso
+
+**Crear un producto:**
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl -X POST http://localhost:3000/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Paracetamol 500mg",
+    "description": "Tabletas analgésicas y antipiréticas para el alivio del dolor leve a moderado y la fiebre.",
+    "price": 4.50,
+    "imageUrl": "https://example.com/images/paracetamol-500.jpg"
+  }'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Obtener todos los productos:**
 
-## Resources
+```bash
+curl http://localhost:3000/products
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+**Obtener un producto específico:**
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+curl http://localhost:3000/products/1
+```
 
-## Support
+**Actualizar un producto:**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+curl -X PUT http://localhost:3000/products/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Producto Actualizado",
+    "price": 39.99
+  }'
+```
 
-## Stay in touch
+**Eliminar un producto:**
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+curl -X DELETE http://localhost:3000/products/1
+```
 
-## License
+## 📊 Base de datos
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+El proyecto utiliza Prisma como ORM. Para gestionar la base de datos:
+
+```bash
+# Ver la base de datos en el navegador
+npx prisma studio
+
+# Resetear la base de datos
+npx prisma db reset
+
+# Ver el estado de las migraciones
+npx prisma migrate status
+```
+
+## 🔧 Scripts disponibles
+
+- `npm run start` - Ejecutar en modo desarrollo
+- `npm run start:dev` - Ejecutar en modo desarrollo con hot reload
+- `npm run start:prod` - Ejecutar en modo producción
+- `npm run build` - Construir la aplicación
+- `npm run test` - Ejecutar tests
+- `npm run lint` - Ejecutar linter
+- `npm run format` - Formatear código
+
+## 📝 Notas de desarrollo
+
+### DTOs (Data Transfer Objects)
+
+- **CreateProductDto**: Define la estructura para crear productos
+- **UpdateProductDto**: Define la estructura para actualizar productos (campos opcionales)
+
+### Validación
+
+El proyecto utiliza class-validator para la validación de datos de entrada.
+
+### Manejo de errores
+
+Los errores se manejan de forma centralizada y retornan respuestas HTTP apropiadas.
+
+## 🚀 Despliegue
+
+### Docker
+
+```bash
+# Construir y levantar los contenedores definidos en docker-compose en modo detached
+sudo docker compose up --build -d
+
+```
+
+### Variables de entorno para producción
+
+```env
+DATABASE_URL="postgresql://user:password@host:port/database"
+NODE_ENV=production
+PORT=3000
+```
+
+## 🤝 Contribuir
+
+1. Fork del proyecto
+2. Crear una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit de tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abrir un Pull Request
+
+## 📞 Contacto
+
+Para preguntas o soporte, contacta a [jorgemova01@gmail.com]
