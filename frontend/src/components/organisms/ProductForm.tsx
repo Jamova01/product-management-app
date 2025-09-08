@@ -51,14 +51,6 @@ export function ProductForm() {
               step="0.01"
             />
 
-            <FormTextField
-              control={form.control}
-              name="imageUrl"
-              label="URL de la imagen del producto"
-              placeholder="https://example.com/image.jpg"
-              type="url"
-            />
-
             <Button
               type="submit"
               disabled={loading}
