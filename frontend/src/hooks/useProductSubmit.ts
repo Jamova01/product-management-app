@@ -1,7 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ProductFormData, ProductSchema } from "@/schemas/product.schema";
 import { useProductStore } from "@/stores/product.store";
