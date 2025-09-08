@@ -3,7 +3,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ProductFormData, ProductSchema } from "@/schemas/product.schema";
+import {
+  CreateProductData,
+  ProductFormData,
+  ProductFormSchema,
+} from "@/schemas/product.schema";
 import { useProductStore } from "@/stores/product.store";
 
 export function useProductSubmit() {
@@ -11,18 +15,27 @@ export function useProductSubmit() {
   const loading = useProductStore((state) => state.loading);
 
   const form = useForm<ProductFormData>({
-    resolver: zodResolver(ProductSchema),
+    resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       name: "",
       description: "",
-      price: 0,
+      price: "",
       imageUrl: "",
     },
   });
 
-  async function onSubmit(values: ProductFormData) {
-    await createProduct(values);
-    form.reset();
+  async function onSubmit(data: ProductFormData) {
+    const payload: CreateProductData = {
+      name: data.name,
+      description: data.description,
+      price: Number(data.price),
+    };
+
+    if (data.imageUrl && data.imageUrl.trim() !== "") {
+      payload.imageUrl = data.imageUrl;
+    }
+
+    await createProduct(payload);
   }
 
   return { form, onSubmit, loading };
