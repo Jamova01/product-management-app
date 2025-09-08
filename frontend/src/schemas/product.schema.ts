@@ -13,18 +13,12 @@ export const ProductFormSchema = z.object({
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "El precio debe ser un número mayor a 0",
     }),
-  imageUrl: z
-    .url(
-      "La URL de la imagen debe ser válida (ej: https://example.com/imagen.jpg)"
-    )
-    .optional(),
 });
 
 export const CreateProductSchema = z.object({
   name: z.string(),
   description: z.string(),
   price: z.number(),
-  imageUrl: z.string().optional(),
 });
 
 export const ProductSchema = z.object({
@@ -32,7 +26,6 @@ export const ProductSchema = z.object({
   name: z.string(),
   description: z.string(),
   price: z.number(),
-  imageUrl: z.string().optional(),
 });
 
 export type ProductFormData = z.infer<typeof ProductFormSchema>;
