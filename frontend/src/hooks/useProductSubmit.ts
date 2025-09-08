@@ -20,7 +20,6 @@ export function useProductSubmit() {
       name: "",
       description: "",
       price: "",
-      imageUrl: "",
     },
   });
 
@@ -31,11 +30,10 @@ export function useProductSubmit() {
       price: Number(data.price),
     };
 
-    if (data.imageUrl && data.imageUrl.trim() !== "") {
-      payload.imageUrl = data.imageUrl;
+    const product = await createProduct(payload);
+    if (product) {
+      form.reset();
     }
-
-    await createProduct(payload);
   }
 
   return { form, onSubmit, loading };
