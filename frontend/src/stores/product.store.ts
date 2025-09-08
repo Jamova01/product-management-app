@@ -3,15 +3,40 @@
 import { create } from "zustand";
 import { toast } from "sonner";
 import api from "@/lib/axios";
-import { Product, ProductFormData } from "@/schemas/product.schema";
+import { Product, CreateProductData } from "@/schemas/product.schema";
+import { AxiosError } from "axios";
+
+interface ApiErrorResponse {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
 
 type ProductState = {
   products: Product[];
   loading: boolean;
   getProducts: () => Promise<void>;
-  createProduct: (values: ProductFormData) => Promise<void>;
+  createProduct: (values: CreateProductData) => Promise<Product | null>;
   deleteProduct: (id: string) => Promise<void>;
 };
+
+function extractErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof AxiosError) {
+    const responseData = error.response?.data as ApiErrorResponse | undefined;
+    if (responseData?.message) {
+      return Array.isArray(responseData.message)
+        ? responseData.message.join(", ")
+        : responseData.message;
+    }
+    return error.message || fallback;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return fallback;
+}
 
 export const useProductStore = create<ProductState>((set) => ({
   products: [],
@@ -22,21 +47,23 @@ export const useProductStore = create<ProductState>((set) => ({
     try {
       const { data } = await api.get<Product[]>("/products");
       set({ products: data });
-    } catch {
-      toast.error("Error al cargar productos");
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "Error al cargar productos"));
     } finally {
       set({ loading: false });
     }
   },
 
-  createProduct: async (values: ProductFormData) => {
+  createProduct: async (values: CreateProductData) => {
     set({ loading: true });
     try {
       const { data } = await api.post<Product>("/products", values);
       set((state) => ({ products: [...state.products, data] }));
       toast.success("Producto creado correctamente");
-    } catch {
-      toast.error("No se pudo crear el producto");
+      return data;
+    } catch (error: unknown) {
+      toast.error(extractErrorMessage(error, "No se pudo crear el producto"));
+      return null;
     } finally {
       set({ loading: false });
     }
@@ -50,8 +77,10 @@ export const useProductStore = create<ProductState>((set) => ({
         products: state.products.filter((p) => p.id !== id),
       }));
       toast.success("Producto eliminado");
-    } catch {
-      toast.error("No se pudo eliminar el producto");
+    } catch (error: unknown) {
+      toast.error(
+        extractErrorMessage(error, "No se pudo eliminar el producto")
+      );
     } finally {
       set({ loading: false });
     }
