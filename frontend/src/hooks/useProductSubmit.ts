@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import axios from "axios";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
-import { ProductSchema, ProductFormData } from "@/schemas/product.schema";
+import { ProductFormData, ProductSchema } from "@/schemas/product.schema";
+import { useProductStore } from "@/stores/product.store";
 
 export function useProductSubmit() {
-  const [loading, setLoading] = useState(false);
+  const createProduct = useProductStore((state) => state.createProduct);
+  const loading = useProductStore((state) => state.loading);
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(ProductSchema),
@@ -22,16 +21,8 @@ export function useProductSubmit() {
   });
 
   async function onSubmit(values: ProductFormData) {
-    setLoading(true);
-    try {
-      await axios.post("http://localhost:3000/products", values);
-      toast.success("Product created successfully");
-      return values;
-    } catch {
-      toast.error("Failed to create product");
-    } finally {
-      setLoading(false);
-    }
+    await createProduct(values);
+    form.reset();
   }
 
   return { form, onSubmit, loading };
