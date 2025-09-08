@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const ProductSchema = z.object({
+export const ProductFormSchema = z.object({
   name: z
     .string()
     .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
@@ -8,11 +8,33 @@ export const ProductSchema = z.object({
     .string()
     .min(5, { message: "La descripción debe tener al menos 5 caracteres" }),
   price: z
-    .number({ error: "El precio debe ser un número" })
-    .positive("El precio debe ser mayor a 0"),
-  imageUrl: z.url("Debe ser una URL válida").optional().or(z.literal("")),
+    .string()
+    .min(1, { message: "El precio es requerido" })
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "El precio debe ser un número mayor a 0",
+    }),
+  imageUrl: z
+    .url(
+      "La URL de la imagen debe ser válida (ej: https://example.com/imagen.jpg)"
+    )
+    .optional(),
 });
 
-export type ProductFormData = z.infer<typeof ProductSchema>;
+export const CreateProductSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  price: z.number(),
+  imageUrl: z.string().optional(),
+});
 
-export type Product = ProductFormData & { id: string };
+export const ProductSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  price: z.number(),
+  imageUrl: z.string().optional(),
+});
+
+export type ProductFormData = z.infer<typeof ProductFormSchema>;
+export type CreateProductData = z.infer<typeof CreateProductSchema>;
+export type Product = z.infer<typeof ProductSchema>;
