@@ -12,7 +12,6 @@ model Product {
   name        String
   description String
   price       Decimal  @db.Decimal(10, 2)
-  imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
